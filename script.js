@@ -87,7 +87,7 @@ $(function() {
     $(function() {
         if (zModConfig[0].fontAwesome === true) $('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />').appendTo("head");
 
-        if (zModConfig[0].loadCss === true) $('<link rel="stylesheet" type="text/css" href="'+ zModConfig[0].css_source +'" />').appendTo("head");
+        if (zModConfig[0].loadCss === true) $('<link rel="stylesheet" attr="loaddes" type="text/css" href="https://cdn.rawgit.com/zeusmaximus/Moderation-tools-for-Forumotion/e46f560/style.css" />').appendTo("head");
 
         $('<style type="text/css">.sceditor-button-staff div {background: url(' + zModConfig[0].icon + ') !important;}</style>').appendTo("head");
 
