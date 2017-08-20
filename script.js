@@ -123,6 +123,7 @@ $(function() {
             function zModInsertToSCEditor(e, t, i) {
                 $(e).live("click", function(e) {
                     $("#text_editor_textarea").sceditor("instance").insertText(zModGetTable(i, "start") + t, zModGetTable(i, "end"));
+                    $('#quick_reply .mod_box').fadeOut(100);
                 });
             }
 
