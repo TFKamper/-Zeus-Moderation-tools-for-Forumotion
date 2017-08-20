@@ -83,72 +83,73 @@ if (typeof zModGroups === 'undefined') var zModGroups = [{
     }
 ];
 
-$(function() { $(function() {
+$(function() {
+    $(function() {
+        if (zModConfig[0].fontAwesome === true) $('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />').appendTo("head");
 
-    if (zModConfig[0].fontAwesome === true) $('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />').appendTo("head");
+        if (zModConfig[0].loadCss === true) $('<link rel="stylesheet" type="text/css" href="'+ zModConfig[0].css_source +'" />').appendTo("head");
 
-    if (zModConfig[0].loadCss === true) $('<link rel="stylesheet" type="text/css" href="'+ zModConfig[0].css_source +'" />').appendTo("head");
+        $('<style type="text/css">.sceditor-button-staff div {background: url(' + zModConfig[0].icon + ') !important;}</style>').appendTo("head");
 
-    $('<style type="text/css">.sceditor-button-staff div {background: url(' + zModConfig[0].icon + ') !important;}</style>').appendTo("head");
+        var list = "";
 
-    var list = "";
+        $('.zmod_box td').each(function() {
+            this.innerHTML = this.innerHTML.replace(/\[icon\="?(.*?)"?\](.*?)\[\/icon\]/g, "<div><i class=\"$1\ icon-message\">$2</i></div>")
+                .replace(/\[div\](.*?)\[\/div\]/g, "<div>$1</div>");
+        });
 
-    $('.zmod_box td').each(function() {
-        this.innerHTML = this.innerHTML.replace(/\[icon\="?(.*?)"?\](.*?)\[\/icon\]/g, "<div><i class=\"$1\ icon-message\">$2</i></div>")
-            .replace(/\[div\](.*?)\[\/div\]/g, "<div>$1</div>");
-    });
+        $(window).load(function() {
+            function zModGetTable(type, body) {
+                var str = "";
+                for (var y = 0; y < zModTabels.length; y++) str += (zModTabels[y].type === type) ? (body === "start") ? zModTabels[y].body_start : zModTabels[y].body_end : "";
+                return str;
+            }
 
-    $(window).load(function() {
-        function zModGetTable(type, body) {
-            var str = "";
-            for (var y = 0; y < zModTabels.length; y++) str += (zModTabels[y].type === type) ? (body === "start") ? zModTabels[y].body_start : zModTabels[y].body_end : "";
-            return str;
-        }
+            function zModGetModMessageByGroupId(f, g) {
+                var str = "",
+                    c = 0;
+                for (var z = 0; z < zModMessages.length; z++) {
+                    if (zModMessages[z].group_id == f) {
+                        str += "<li class='mod_editor_message group_" + zModMessages[z].group_id + "' id='group_" + z + "_" + zModMessages[z].group_id + "'><a style='cursor: pointer'>" + zModMessages[z].name + "</a></li>\n";
+                        if (g === 0) zModInsertToSCEditor('#group_' + z + '_' + zModMessages[z].group_id + ' a', zModMessages[z].message, zModMessages[z].type);
+                        c++;
+                    }
+                }
+                if (g === 1) str = c;
 
-        function zModGetModMessageByGroupId(f, g) {
-            var str = "",
-                c = 0;
-            for (var z = 0; z < zModMessages.length; z++) {
-                if (zModMessages[z].group_id == f) {
-                    str += "<li class='mod_editor_message group_" + zModMessages[z].group_id + "' id='group_" + z + "_" + zModMessages[z].group_id + "'><a style='cursor: pointer'>" + zModMessages[z].name + "</a></li>\n";
-                    if (g === 0) zModInsertToSCEditor('#group_' + z + '_' + zModMessages[z].group_id + ' a', zModMessages[z].message, zModMessages[z].type);
-                    c++;
+                return str;
+            }
+
+            function zModInsertToSCEditor(e, t, i) {
+                $(e).live("click", function(e) {
+                    $("#text_editor_textarea").sceditor("instance").insertText(zModGetTable(i, "start") + t, zModGetTable(i, "end"));
+                });
+            }
+
+            function zModToggleSCEditor(o, i) {
+                $(o).live("click", function(o) {
+                    $(i).toggle();
+                });
+            }
+
+            for (var x = 0; x < zModGroups.length; x++) {
+                if (zModGetModMessageByGroupId(zModGroups[x].id, 1) > 0) {
+                    list += "<li class='mod_editor_section' id='list_" + zModGroups[x].id + "'><a style='cursor: pointer'>" + zModGroups[x].name + " (" + zModGetModMessageByGroupId(zModGroups[x].id, 1) + ")</a></li>" + zModGetModMessageByGroupId(zModGroups[x].id, 0);
+                    zModToggleSCEditor("#list_" + zModGroups[x].id + " a", ".group_" + zModGroups[x].id + "");
                 }
             }
-            if (g === 1) str = c;
 
-            return str;
-        }
+            zModToggleSCEditor('.sceditor-button.sceditor-button-staff', '.mod_box');
 
-        function zModInsertToSCEditor(e, t, i) {
-            $(e).live("click", function(e) {
-                $("#text_editor_textarea").sceditor("instance").insertText(zModGetTable(i, "start") + t, zModGetTable(i, "end"));
+            $("textarea, .sceditor-button").click(function() {
+                $(".mod_box").hide();
             });
-        }
 
-        function zModToggleSCEditor(o, i) {
-            $(o).live("click", function(o) {
-                $(i).toggle();
+            $(".sceditor-button-source").click(function() {
+                $(".sceditor-button-staff").removeClass("disabled");
             });
-        }
-
-        for (var x = 0; x < zModGroups.length; x++) {
-            if (zModGetModMessageByGroupId(zModGroups[x].id, 1) > 0) {
-                list += "<li class='mod_editor_section' id='list_" + zModGroups[x].id + "'><a style='cursor: pointer'>" + zModGroups[x].name + " (" + zModGetModMessageByGroupId(zModGroups[x].id, 1) + ")</a></li>" + zModGetModMessageByGroupId(zModGroups[x].id, 0);
-                zModToggleSCEditor("#list_" + zModGroups[x].id + " a", ".group_" + zModGroups[x].id + "");
-            }
-        }
-
-        zModToggleSCEditor('.sceditor-button.sceditor-button-staff', '.mod_box');
-
-        $("textarea, .sceditor-button").click(function() {
-            $(".mod_box").hide();
         });
 
-        $(".sceditor-button-source").click(function() {
-            $(".sceditor-button-staff").removeClass("disabled");
-        });
+         if(_userdata.user_level > 0) $(".sceditor-group:last-child").before('<div class="sceditor-group"><a class="sceditor-button sceditor-button-staff" title="Mesaje de moderare"><div unselectable="on">Mesaje de moderare</div></a><div class="mod_box" style="display: none;"><ul class="mod_groups" id="mod_box_i">' + list + '<li class="copyright_e"> © Created by Zeus - All right reserved</li></div></div></div>');
     });
-    
-     if(_userdata.user_level > 0) $(".sceditor-group:last-child").before('<div class="sceditor-group"><a class="sceditor-button sceditor-button-staff" title="Mesaje de moderare"><div unselectable="on">Mesaje de moderare</div></a><div class="mod_box" style="display: none;"><ul class="mod_groups" id="mod_box_i">' + list + '<li class="copyright_e"> © Created by Zeus - All right reserved</li></div></div></div>');
-}); });
+});
