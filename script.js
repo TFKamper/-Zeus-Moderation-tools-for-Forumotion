@@ -9,7 +9,7 @@
 if (typeof zModConfig === 'undefined') var zModConfig = [{
     icon: "https://i58.servimg.com/u/f58/11/80/17/98/chat-110.png",
     loadCss: true, // true or false
-    css_source: "https://cdn.rawgit.com/zeusmaximus/Moderation-tools-for-Forumotion/e46f560/style.css",
+    css_source: "https://rawcdn.githack.com/TFKamper/-Zeus-Moderation-tools-for-Forumotion/a32904811e335323fd3d0f97324d40db735ec680/style.css",
     fontAwesome: true // true or false
 }];
 
